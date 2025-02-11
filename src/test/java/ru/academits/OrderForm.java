@@ -1,7 +1,7 @@
 package ru.academits;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -11,8 +11,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 
 public class OrderForm {
-    private WebDriver driver;
-
     @Test
     public void OrderFormTest() throws InterruptedException {
 
@@ -34,17 +32,17 @@ public class OrderForm {
 
         driver.findElement(By.cssSelector("[name='submit']")).click();
 
-        String fullName = driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[1]")).getText();
-        Assertions.assertTrue(fullName.contains("Необходимо заполнить поле ФИО:."));
+        SoftAssertions softAssert = new SoftAssertions();
 
-        String eMail = driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[2]")).getText();
-        Assertions.assertTrue(eMail.contains("Необходимо заполнить поле E-mail."));
+        softAssert.assertThat(driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[1]")).getText()).isEqualTo("Необходимо заполнить поле ФИО:.");
 
-        String quantity = driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[3]")).getText();
-        Assertions.assertTrue(quantity.contains("Необходимо заполнить поле Количество."));
+        softAssert.assertThat(driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[2]")).getText()).isEqualTo("Необходимо заполнить поле E-mail.");
 
-        String date = driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[4]")).getText();
-        Assertions.assertTrue(date.contains("Необходимо заполнить поле Дата доставки."));
+        softAssert.assertThat(driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[3]")).getText()).isEqualTo("Необходимо заполнить поле Количество.");
+
+        softAssert.assertThat(driver.findElement(By.xpath("//*[@class='errorSummary errorSummary_top']/ul/li[4]")).getText()).isEqualTo("Необходимо заполнить поле Дата доставки.");
+
+        softAssert.assertAll();
 
         driver.quit();
     }

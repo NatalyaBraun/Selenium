@@ -11,12 +11,16 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.io.File;
+import java.time.Duration;
 
 public class DemoQA {
     private WebDriver driver;
 
     @BeforeEach
+
     public void setup() {
 
         String browser = System.getProperty("browser");
@@ -39,19 +43,21 @@ public class DemoQA {
     }
 
     @Test
-    public void DemoTest() {
+    public void DemoTest()  {
 
-        driver.findElement(By.id("firstName")).sendKeys("Natalya");
+        WebElement firstName = driver.findElement(By.id("firstName"));
+        firstName.sendKeys("Natalya");
 
-        driver.findElement(By.id("lastName")).sendKeys("Braun");
+        WebElement lastName = driver.findElement(By.id("lastName"));
+        lastName.sendKeys("Braun");
 
-        driver.findElement(By.id("userEmail")).sendKeys("fire@mail.ru");
+        WebElement userEmail = driver.findElement(By.id("userEmail"));
+        userEmail.sendKeys("fire@mail.ru");
 
         driver.findElement(By.xpath("//div[2]/label")).click();
 
-        driver.findElement(By.id("userNumber")).sendKeys("8913913319");
-
-        driver.findElement(By.id("currentAddress")).sendKeys("Sector 25 Huda, Panipat");
+        WebElement userNumber = driver.findElement(By.id("userNumber"));
+        userNumber.sendKeys("8913913319");
 
         driver.findElement(By.xpath("//input[@id='dateOfBirthInput']")).click();
 
@@ -67,7 +73,16 @@ public class DemoQA {
         subjects.sendKeys(userSubjects);
         subjects.sendKeys(Keys.ENTER);
 
-        driver.findElement(By.cssSelector("label[for='hobbies-checkbox-1']")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30),Duration.ofMillis(500));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.className("custom-control-label")));
+
+        WebElement hobbiesCheckbox = driver.findElement(By.id("hobbies-checkbox-1"));
+        hobbiesCheckbox.click();
+
+        File picture = new File("src/main/resources/img.jpg");
+        WebElement uploadPicture = driver.findElement(By.id("uploadPicture"));
+        uploadPicture.sendKeys(picture.getAbsolutePath());
 
         driver.findElement(By.id("currentAddress")).sendKeys("Sector 25 Huda, Panipat");
 
