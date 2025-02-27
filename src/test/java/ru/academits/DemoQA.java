@@ -1,6 +1,7 @@
 package ru.academits;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
 import java.time.Duration;
 
@@ -43,21 +45,23 @@ public class DemoQA {
     }
 
     @Test
-    public void DemoTest()  {
+    public void demoTest() {
 
-        WebElement firstName = driver.findElement(By.id("firstName"));
-        firstName.sendKeys("Natalya");
+        String firstName = "Natalya";
+        driver.findElement(By.id("firstName")).sendKeys(firstName);
 
-        WebElement lastName = driver.findElement(By.id("lastName"));
-        lastName.sendKeys("Braun");
+        String lastName = "Braun";
+        driver.findElement(By.id("lastName")).sendKeys(lastName);
 
-        WebElement userEmail = driver.findElement(By.id("userEmail"));
-        userEmail.sendKeys("fire@mail.ru");
+        String userEmail = "fire@mail.ru";
+        driver.findElement(By.id("userEmail")).sendKeys(userEmail);
 
-        driver.findElement(By.xpath("//div[2]/label")).click();
+        WebElement gender = driver.findElement(By.xpath("//div[2]/label"));
+        gender.click();
+        String userGender = gender.getText();
 
-        WebElement userNumber = driver.findElement(By.id("userNumber"));
-        userNumber.sendKeys("8913913319");
+        String userNumber = "8913913319";
+        driver.findElement(By.id("userNumber")).sendKeys(userNumber);
 
         driver.findElement(By.xpath("//input[@id='dateOfBirthInput']")).click();
 
@@ -73,16 +77,24 @@ public class DemoQA {
         subjects.sendKeys(userSubjects);
         subjects.sendKeys(Keys.ENTER);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30),Duration.ofMillis(500));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30), Duration.ofMillis(500));
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.className("custom-control-label")));
 
-        WebElement hobbiesCheckbox = driver.findElement(By.id("hobbies-checkbox-1"));
-        hobbiesCheckbox.click();
+//        WebElement hobbiesCheckbox = driver.findElement(By.cssSelector("label[for='hobbies-checkbox-1']"));
+//        hobbiesCheckbox.click();
+//        String userHobbies = hobbiesCheckbox.getText();
+//
+//        WebElement hobbiesCheckbox = driver.findElement(By.id("hobbies-checkbox-1"));
+//        hobbiesCheckbox.click();
+//        String userHobbies = hobbiesCheckbox.getText();
 
         File picture = new File("src/main/resources/img.jpg");
         WebElement uploadPicture = driver.findElement(By.id("uploadPicture"));
         uploadPicture.sendKeys(picture.getAbsolutePath());
+
+        String userAddress = "Sector 25 Huda, Panipat";
+        driver.findElement(By.id("currentAddress")).sendKeys(userAddress);
 
         driver.findElement(By.id("currentAddress")).sendKeys("Sector 25 Huda, Panipat");
 
@@ -97,6 +109,21 @@ public class DemoQA {
         city.sendKeys(Keys.ENTER);
 
         driver.findElement(By.id("submit")).click();
+
+        SoftAssertions softAssert = new SoftAssertions();
+
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[1]/td[2]")).getText()).contains(firstName, lastName);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[2]/td[2]")).getText()).isEqualTo(userEmail);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[3]/td[2]")).getText()).isEqualTo(userGender);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[4]/td[2]")).getText()).isEqualTo(userNumber);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[5]/td[2]")).getText()).contains(userYear);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[6]/td[2]")).getText()).isEqualTo(userSubjects);
+//        softAssert.assertThat(driver.findElement(By.xpath("//tr[7]/td[2]")).getText()).isEqualTo(userHobbies);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[8]/td[2]")).isDisplayed());
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[9]/td[2]")).getText()).contains(userAddress);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[10]/td[2]")).getText()).contains(userState, userCity);
+
+        softAssert.assertAll();
     }
 
     @AfterEach
