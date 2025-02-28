@@ -5,10 +5,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -81,13 +78,9 @@ public class DemoQA {
         wait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.className("custom-control-label")));
 
-//        WebElement hobbiesCheckbox = driver.findElement(By.cssSelector("label[for='hobbies-checkbox-1']"));
-//        hobbiesCheckbox.click();
-//        String userHobbies = hobbiesCheckbox.getText();
-//
-//        WebElement hobbiesCheckbox = driver.findElement(By.id("hobbies-checkbox-1"));
-//        hobbiesCheckbox.click();
-//        String userHobbies = hobbiesCheckbox.getText();
+        WebElement hobbiesCheckbox = driver.findElement(By.cssSelector("label[for='hobbies-checkbox-1']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", hobbiesCheckbox);
+        String userHobbies = hobbiesCheckbox.getText();
 
         File picture = new File("src/main/resources/img.jpg");
         WebElement uploadPicture = driver.findElement(By.id("uploadPicture"));
@@ -118,7 +111,7 @@ public class DemoQA {
         softAssert.assertThat(driver.findElement(By.xpath("//tr[4]/td[2]")).getText()).isEqualTo(userNumber);
         softAssert.assertThat(driver.findElement(By.xpath("//tr[5]/td[2]")).getText()).contains(userYear);
         softAssert.assertThat(driver.findElement(By.xpath("//tr[6]/td[2]")).getText()).isEqualTo(userSubjects);
-//        softAssert.assertThat(driver.findElement(By.xpath("//tr[7]/td[2]")).getText()).isEqualTo(userHobbies);
+        softAssert.assertThat(driver.findElement(By.xpath("//tr[7]/td[2]")).getText()).isEqualTo(userHobbies);
         softAssert.assertThat(driver.findElement(By.xpath("//tr[8]/td[2]")).isDisplayed());
         softAssert.assertThat(driver.findElement(By.xpath("//tr[9]/td[2]")).getText()).contains(userAddress);
         softAssert.assertThat(driver.findElement(By.xpath("//tr[10]/td[2]")).getText()).contains(userState, userCity);
